@@ -38,7 +38,7 @@ export const ToDo = () => {
         setTasks(newTasks);
     };
 
-    const addNewTask = (values) => {
+    const submitForm = (values) => {
         if (values.id) {
             const newTasks = tasks.map((task) => {
                 if (task.id === values.id) {
@@ -68,7 +68,7 @@ export const ToDo = () => {
         <>
             <NewTaskModal
                 isOpen={newTaskModal}
-                onSubmit={addNewTask}
+                onSubmit={submitForm}
                 closeModal={() => setNewTaskModal(false)}
                 editData={editData}
             />
