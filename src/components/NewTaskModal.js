@@ -1,14 +1,24 @@
 import React from 'react';
-import { Dialog, TextField, Box, Grid } from '@material-ui/core';
+import {
+    Dialog,
+    TextField,
+    Box,
+    Grid,
+    Button,
+    Typography,
+} from '@material-ui/core';
 import { Formik, Field } from 'formik';
 import * as yup from 'yup';
+import DatePicker from 'react-datepicker';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 export const NewTaskModal = ({ isOpen, onSubmit, closeModal }) => {
     const initialValues = {
         name: '',
         description: '',
         priority: 'Low',
-        date: null,
+        date: new Date(),
         completed: false,
     };
 
@@ -24,13 +34,12 @@ export const NewTaskModal = ({ isOpen, onSubmit, closeModal }) => {
             .required('This fields is required')
             .test((date) => {
                 if (date) {
-                    return date > new Date();
+                    return date.getTime() > new Date().getTime();
                 } else {
                     return false;
                 }
             }),
     });
-
     return (
         <Dialog open={isOpen} onClose={closeModal}>
             <Box className="modal">
@@ -41,6 +50,7 @@ export const NewTaskModal = ({ isOpen, onSubmit, closeModal }) => {
                 >
                     <Grid container className="modal__container">
                         <Grid item xs={12} className="modal__fieldbox">
+                            <Typography variant="caption">Name</Typography>
                             <Field name="name">
                                 {(fieldProps) => (
                                     <TextField
@@ -48,11 +58,22 @@ export const NewTaskModal = ({ isOpen, onSubmit, closeModal }) => {
                                         className="modal__field"
                                         placeholder="Enter name"
                                         variant="outlined"
+                                        error={
+                                            fieldProps.meta.touched &&
+                                            Boolean(fieldProps.meta.error)
+                                        }
+                                        helperText={
+                                            fieldProps.meta.touched &&
+                                            fieldProps.meta.error
+                                        }
                                     />
                                 )}
                             </Field>
                         </Grid>
                         <Grid item xs={12} className="modal__fieldbox">
+                            <Typography variant="caption">
+                                Description
+                            </Typography>
                             <Field name="description">
                                 {(fieldProps) => (
                                     <TextField
@@ -60,11 +81,39 @@ export const NewTaskModal = ({ isOpen, onSubmit, closeModal }) => {
                                         className="modal__field"
                                         placeholder="Enter description"
                                         variant="outlined"
+                                        error={
+                                            fieldProps.meta.touched &&
+                                            Boolean(fieldProps.meta.error)
+                                        }
+                                        helperText={
+                                            fieldProps.meta.touched &&
+                                            fieldProps.meta.error
+                                        }
                                     />
                                 )}
                             </Field>
                         </Grid>
                         <Grid item xs={12} className="modal__fieldbox">
+                            <Typography variant="caption">Date</Typography>
+                            <Field name="date">
+                                {(fieldProps) => {
+                                    return (
+                                        <DatePicker
+                                            name="date"
+                                            selected={fieldProps.field.value}
+                                            onSelect={(val) => {
+                                                fieldProps.form.setFieldValue(
+                                                    'date',
+                                                    val
+                                                );
+                                            }}
+                                        />
+                                    );
+                                }}
+                            </Field>
+                        </Grid>
+                        <Grid item xs={12} className="modal__fieldbox">
+                            <Typography variant="caption">Priority</Typography>
                             <Field name="priority">
                                 {(fieldProps) => (
                                     <TextField
@@ -73,6 +122,14 @@ export const NewTaskModal = ({ isOpen, onSubmit, closeModal }) => {
                                         className="modal__field"
                                         title="Enter priority"
                                         variant="outlined"
+                                        error={
+                                            fieldProps.meta.touched &&
+                                            Boolean(fieldProps.meta.error)
+                                        }
+                                        helperText={
+                                            fieldProps.meta.touched &&
+                                            fieldProps.meta.error
+                                        }
                                     >
                                         <option value={'Low'}>Low</option>
                                         <option value={'Medium'}>Medium</option>
@@ -80,6 +137,23 @@ export const NewTaskModal = ({ isOpen, onSubmit, closeModal }) => {
                                     </TextField>
                                 )}
                             </Field>
+                        </Grid>
+                        <Grid item xs={12} className="modal__fieldbox">
+                            <Field>
+                                {(fieldProps) => {
+                                    return (
+                                        <Button
+                                            onClick={() => {
+                                                fieldProps.form.submitForm();
+                                            }}
+                                            disabled={!fieldProps.form.isValid}
+                                        >
+                                            Submit
+                                        </Button>
+                                    );
+                                }}
+                            </Field>
+                            <Button onClick={() => closeModal()}>Close</Button>
                         </Grid>
                     </Grid>
                 </Formik>

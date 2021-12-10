@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Grid, Box, Button } from '@material-ui/core';
 
+import { NewTaskModal } from '../components/NewTaskModal';
+import { v4 as uuidv4 } from 'uuid';
+
 const mockTasks = [
     {
         id: 1,
@@ -21,6 +24,7 @@ const mockTasks = [
 ];
 export const ToDo = () => {
     const [tasks, setTasks] = useState(mockTasks);
+    const [newTaskModal, setNewTaskModal] = useState(false);
 
     const setCompleted = (id) => {
         const newTasks = tasks.map((task) => {
@@ -33,28 +37,49 @@ export const ToDo = () => {
         setTasks(newTasks);
     };
 
+    const addNewTask = (values) => {
+        setTasks([...tasks, { ...values, id: uuidv4() }]);
+        setNewTaskModal(false);
+    };
+
     return (
-        <Grid container className="todo-container">
-            {tasks.map((task, i) => (
-                <Grid item key={i} xs={12} sm={10} md={8}>
-                    <Box
-                        className={`todo-item ${
-                            task.completed ? 'todo-item--completed' : ''
-                        }`}
-                    >
-                        <Box>{task.name}</Box>
-                        <Box display="flex">
-                            <Button>Edit</Button>
-                            <Button>Delete</Button>
-                            {!task.completed && (
-                                <Button onClick={() => setCompleted(task.id)}>
-                                    Complete
-                                </Button>
-                            )}
+        <>
+            <NewTaskModal
+                isOpen={newTaskModal}
+                onSubmit={addNewTask}
+                closeModal={() => setNewTaskModal(false)}
+            />
+            <Grid container className="todo-container">
+                {tasks.map((task, i) => (
+                    <Grid item key={i} xs={12} sm={10} md={8}>
+                        <Box
+                            className={`todo-item ${
+                                task.completed ? 'todo-item--completed' : ''
+                            }`}
+                        >
+                            <Box>{task.name}</Box>
+                            <Box display="flex">
+                                <Button>Edit</Button>
+                                <Button>Delete</Button>
+                                {!task.completed && (
+                                    <Button
+                                        onClick={() => setCompleted(task.id)}
+                                    >
+                                        Complete
+                                    </Button>
+                                )}
+                            </Box>
                         </Box>
+                    </Grid>
+                ))}
+                <Grid item xs={12}>
+                    <Box display="flex" justifyContent="center">
+                        <Button onClick={() => setNewTaskModal(true)}>
+                            Add new task
+                        </Button>
                     </Box>
                 </Grid>
-            ))}
-        </Grid>
+            </Grid>
+        </>
     );
 };
