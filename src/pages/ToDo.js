@@ -64,6 +64,11 @@ export const ToDo = () => {
         setNewTaskModal(true);
     };
 
+    const viewTask = (task) => {
+        setEditData(task);
+        setNewTaskModal(true);
+    }
+
     return (
         <>
             <NewTaskModal
@@ -74,7 +79,7 @@ export const ToDo = () => {
             />
             <Grid container className="todo-container">
                 {tasks.map((task, i) => (
-                    <Grid item key={i} xs={12} sm={10} md={8}>
+                    <Grid item key={i} xs={12} sm={10} md={8} onClick={() => viewTask(task)}>
                         <Box
                             className={`todo-item ${
                                 task.completed ? 'todo-item--completed' : ''
