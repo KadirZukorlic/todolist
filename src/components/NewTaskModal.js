@@ -107,6 +107,7 @@ export const NewTaskModal = ({ isOpen, onSubmit, closeModal }) => {
                                                     val
                                                 );
                                             }}
+                                            minDate={new Date()}
                                         />
                                     );
                                 }}
