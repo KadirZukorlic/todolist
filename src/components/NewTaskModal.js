@@ -13,13 +13,14 @@ import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-export const NewTaskModal = ({ isOpen, onSubmit, closeModal }) => {
+export const NewTaskModal = ({ isOpen, onSubmit, closeModal, editData }) => {
     const initialValues = {
         name: '',
         description: '',
         priority: 'Low',
         date: new Date(),
         completed: false,
+        ...editData
     };
 
     const validationSchema = yup.object().shape({
@@ -47,6 +48,7 @@ export const NewTaskModal = ({ isOpen, onSubmit, closeModal }) => {
                     initialValues={initialValues}
                     onSubmit={(values) => onSubmit(values)}
                     validationSchema={validationSchema}
+                    enableReinitialize={true}
                 >
                     <Grid container className="modal__container">
                         <Grid item xs={12} className="modal__fieldbox">

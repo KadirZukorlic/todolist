@@ -25,6 +25,7 @@ const mockTasks = [
 export const ToDo = () => {
     const [tasks, setTasks] = useState(mockTasks);
     const [newTaskModal, setNewTaskModal] = useState(false);
+    const [editData, setEditData] = useState({});
 
     const setCompleted = (id) => {
         const newTasks = tasks.map((task) => {
@@ -38,8 +39,29 @@ export const ToDo = () => {
     };
 
     const addNewTask = (values) => {
-        setTasks([...tasks, { ...values, id: uuidv4() }]);
+        if (values.id) {
+            const newTasks = tasks.map((task) => {
+                if (task.id === values.id) {
+                    return { ...values };
+                } else {
+                    return task;
+                }
+            });
+            setTasks(newTasks);
+        } else {
+            setTasks([...tasks, { ...values, id: uuidv4() }]);
+        }
         setNewTaskModal(false);
+    };
+
+    const deleteTask = (id) => {
+        const newTasks = tasks.filter((task) => task.id !== id);
+        setTasks(newTasks);
+    };
+
+    const editTask = (task) => {
+        setEditData(task);
+        setNewTaskModal(true);
     };
 
     return (
@@ -48,6 +70,7 @@ export const ToDo = () => {
                 isOpen={newTaskModal}
                 onSubmit={addNewTask}
                 closeModal={() => setNewTaskModal(false)}
+                editData={editData}
             />
             <Grid container className="todo-container">
                 {tasks.map((task, i) => (
@@ -59,8 +82,12 @@ export const ToDo = () => {
                         >
                             <Box>{task.name}</Box>
                             <Box display="flex">
-                                <Button>Edit</Button>
-                                <Button>Delete</Button>
+                                <Button onClick={() => editTask(task)}>
+                                    Edit
+                                </Button>
+                                <Button onClick={() => deleteTask(task.id)}>
+                                    Delete
+                                </Button>
                                 {!task.completed && (
                                     <Button
                                         onClick={() => setCompleted(task.id)}
