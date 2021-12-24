@@ -20,12 +20,12 @@ export const NewTaskModal = ({ isOpen, onSubmit, closeModal, editData }) => {
         priority: 'Low',
         date: new Date(),
         completed: false,
-        ...editData
+        ...editData,
     };
 
     const validationSchema = yup.object().shape({
         name: yup
-            .string()
+            .string() //mora biti string
             .required('This fields is required')
             .max(100, 'Max number of characters is 100'),
         description: yup.string().max(1000, 'Max number of characters is 1000'),
@@ -60,6 +60,7 @@ export const NewTaskModal = ({ isOpen, onSubmit, closeModal, editData }) => {
                                         className="modal__field"
                                         placeholder="Enter name"
                                         variant="outlined"
+                                        // ako je nesto ukucano, a nije validno, daj mi error
                                         error={
                                             fieldProps.meta.touched &&
                                             Boolean(fieldProps.meta.error)
@@ -121,7 +122,7 @@ export const NewTaskModal = ({ isOpen, onSubmit, closeModal, editData }) => {
                                 {(fieldProps) => (
                                     <TextField
                                         {...fieldProps.field}
-                                        select
+                                        select={true}
                                         className="modal__field"
                                         title="Enter priority"
                                         variant="outlined"

@@ -22,6 +22,7 @@ const mockTasks = [
         completed: true,
     },
 ];
+
 export const ToDo = () => {
     const [tasks, setTasks] = useState(mockTasks);
     const [newTaskModal, setNewTaskModal] = useState(false);
@@ -38,6 +39,25 @@ export const ToDo = () => {
         setTasks(newTasks);
     };
 
+
+
+
+    const setUncompleted = (id) => {
+      const uncomplete = tasks.map((task) => {
+          if (task.id === id) {
+              return { ...task, completed: false}
+          } else {
+              return task;
+          }
+      });
+      setTasks(uncomplete)
+    };
+
+
+    // const handleUpdate = () => {
+    //     const updatedTasks = tasks.findIndex()
+    // }
+
     const submitForm = (values) => {
         if (values.id) {
             const newTasks = tasks.map((task) => {
@@ -52,6 +72,7 @@ export const ToDo = () => {
             setTasks([...tasks, { ...values, id: uuidv4() }]);
         }
         setNewTaskModal(false);
+        setEditData({}); //zaboravio
     };
 
     const deleteTask = (id) => {
@@ -64,10 +85,6 @@ export const ToDo = () => {
         setNewTaskModal(true);
     };
 
-    const viewTask = (task) => {
-        setEditData(task);
-        setNewTaskModal(true);
-    }
 
     return (
         <>
@@ -79,7 +96,7 @@ export const ToDo = () => {
             />
             <Grid container className="todo-container">
                 {tasks.map((task, i) => (
-                    <Grid item key={i} xs={12} sm={10} md={8} onClick={() => viewTask(task)}>
+                    <Grid item key={i} xs={12} sm={10} md={8}>
                         <Box
                             className={`todo-item ${
                                 task.completed ? 'todo-item--completed' : ''
@@ -100,6 +117,7 @@ export const ToDo = () => {
                                         Complete
                                     </Button>
                                 )}
+                                {task.completed  && <Button onClick={() => setUncompleted(task.id)}>Uncomplete</Button>}
                             </Box>
                         </Box>
                     </Grid>
